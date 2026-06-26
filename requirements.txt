@@ -1,0 +1,25 @@
+# LangChain Core
+langchain
+langchain-core
+langchain-community
+
+# Hugging Face Integration
+langchain-huggingface
+sentence-transformers
+transformers
+huggingface-hub
+
+# Environment Variable Management
+python-dotenv
+
+# Machine Learning Utilities
+pandas
+numpy
+matplotlib
+scikit-learn
+torch
+
+#ui
+streamlit
+chromadb
+plotly
