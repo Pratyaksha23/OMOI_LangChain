@@ -1,0 +1,42 @@
+import streamlit as st
+import datetime
+import plotly.graph_objects as go
+
+from utils.storage import get_entries_for_day
+
+st.title("View a Past Entry")
+
+selected_date = st.date_input("Pick a date", value=datetime.date.today())
+
+def show_emotion_donut(emotion: dict, key_suffix=""):
+    labels = list(emotion.keys())
+    values = list(emotion.values())
+
+    fig = go.Figure(data=[go.Pie(
+        labels=[l.capitalize() for l in labels],
+        values=values,
+        hole=0.5,
+        textinfo="none",
+        marker=dict(line=dict(color="#ffffff", width=2))
+    )])
+    fig.update_layout(showlegend=True, margin=dict(t=20, b=20, l=20, r=20), height=420)
+    st.plotly_chart(fig, use_container_width=True, key=f"donut_{key_suffix}")
+
+if st.button("Show Entries"):
+    date_str = selected_date.strftime("%Y-%m-%d")
+    entries = get_entries_for_day(date_str)
+
+    if not entries:
+        st.info(f"No entries found for {date_str}.")
+    else:
+        for i, e in enumerate(entries):
+            st.markdown(f"**{e['date']}**")
+            st.write(e["journal"])
+
+            st.caption("Emotion Breakdown")
+            show_emotion_donut(e["emotion"], key_suffix=str(i))
+
+            st.write(f"**Reflection:** {e['reflection']['reflection']}")
+            st.write(f"**Encouragement:** {e['reflection']['encouragement']}")
+            st.write(f"**Tomorrow:** {e['reflection']['activity']}")
+            st.divider()
